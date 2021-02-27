@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.purejava</groupId>
+  <artifactId>keepassxc-cryptomator</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+
+  <name>keepassxc-cryptomator</name>
+  <description>Store Cryptomator vault passwords in KeePassXC</description>
+  <url>https://github.com/purejava/keepassxc-cryptomator/</url>
+  <scm>
+    <connection>scm:git:git@github.com:purejava/keepassxc-cryptomator.git</connection>
+    <developerConnection>scm:git:git@github.com:purejava/keepassxc-cryptomator.git</developerConnection>
+    <url>git@github.com:purejava/keepassxc-cryptomator.git</url>
+  </scm>
+
+  <developers>
+    <developer>
+      <name>Ralph Plawetzki</name>
+      <email>ralph@purejava.org</email>
+      <timezone>+1</timezone>
+      <organization></organization>
+      <organizationUrl>https://github.com/purejava</organizationUrl>
+    </developer>
+  </developers>
+
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>https://opensource.org/licenses/MIT</url>
+    </license>
+  </licenses>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <!-- runtime dependencies -->
+    <api.version>1.0.0-beta2</api.version>
+    <keepassxc-proxy.version>0.0.2</keepassxc-proxy.version>
+    <guava.version>30.0-jre</guava.version>
+    <slf4j.version>1.7.30</slf4j.version>
+    <junit.version>5.7.0</junit.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.cryptomator</groupId>
+      <artifactId>integrations-api</artifactId>
+      <version>${api.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>${guava.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.purejava</groupId>
+      <artifactId>keepassxc-proxy-access</artifactId>
+      <version>${keepassxc-proxy.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>5.7.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>5.7.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.7.0</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.0</version>
+        <configuration>
+          <release>14</release>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.22.2</version>
+      </plugin>
+      <plugin>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+          <quiet>true</quiet>
+          <release>14</release>
+          <tags>
+            <!-- workaround for "unknown tag: implNote", see https://blog.codefx.org/java/new-javadoc-tags/#Maven  -->
+            <tag>
+              <name>apiNote</name>
+              <placement>a</placement>
+              <head>API Note:</head>
+            </tag>
+            <tag>
+              <name>implSpec</name>
+              <placement>a</placement>
+              <head>Implementation Requirements:</head>
+            </tag>
+            <tag>
+              <name>implNote</name>
+              <placement>a</placement>
+              <head>Implementation Note:</head>
+            </tag>
+            <tag>
+              <name>param</name>
+            </tag>
+            <tag>
+              <name>return</name>
+            </tag>
+            <tag>
+              <name>throws</name>
+            </tag>
+            <tag>
+              <name>since</name>
+            </tag>
+            <tag>
+              <name>version</name>
+            </tag>
+            <tag>
+              <name>serialData</name>
+            </tag>
+            <tag>
+              <name>see</name>
+            </tag>
+          </tags>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+
+  <profiles>
+    <profile>
+      <id>sign</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.6</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+                <configuration>
+                  <gpgArguments>
+                    <arg>--pinentry-mode</arg>
+                    <arg>loopback</arg>
+                  </gpgArguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>deploy-central</id>
+      <distributionManagement>
+        <repository>
+          <id>ossrh</id>
+          <name>Maven Central</name>
+          <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+      </distributionManagement>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-staging-maven-plugin</artifactId>
+            <version>1.6.8</version>
+            <extensions>true</extensions>
+            <configuration>
+              <serverId>ossrh</serverId>
+              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+              <autoReleaseAfterClose>false</autoReleaseAfterClose>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>deploy-github</id>
+      <distributionManagement>
+        <repository>
+          <id>github</id>
+          <name>GitHub Packages</name>
+          <url>https://maven.pkg.github.com/purejava/keepassxc-cryptomator</url>
+        </repository>
+      </distributionManagement>
+    </profile>
+  </profiles>
+</project>
