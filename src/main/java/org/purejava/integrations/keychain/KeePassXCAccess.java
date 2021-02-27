@@ -14,7 +14,7 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 	private static final Logger LOG = LoggerFactory.getLogger(KeePassXCAccess.class);
 	private KeepassProxyAccess proxy;
 
-	KeePassXCAccess() {
+	public KeePassXCAccess() {
 		this.proxy = new KeepassProxyAccess();
 		try {
 			this.proxy.connect();
