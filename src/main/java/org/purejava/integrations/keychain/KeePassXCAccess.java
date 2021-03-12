@@ -3,11 +3,9 @@ package org.purejava.integrations.keychain;
 import org.cryptomator.integrations.keychain.KeychainAccessException;
 import org.cryptomator.integrations.keychain.KeychainAccessProvider;
 import org.purejava.KeepassProxyAccess;
-import org.purejava.KeepassProxyAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 
 public class KeePassXCAccess implements KeychainAccessProvider {
 
@@ -15,13 +13,8 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 	private KeepassProxyAccess proxy;
 
 	public KeePassXCAccess() {
-		this.proxy = new KeepassProxyAccess();
-		try {
-			this.proxy.connect();
-			this.proxy.associate();
-		} catch (IOException | KeepassProxyAccessException e) {
-			e.printStackTrace();
-		}
+		proxy = new KeepassProxyAccess();
+		proxy.connect();
 	}
 
 	@Override
