@@ -6,6 +6,11 @@ import org.purejava.KeepassProxyAccess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 public class KeePassXCAccess implements KeychainAccessProvider {
 
@@ -14,25 +19,42 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 
 	public KeePassXCAccess() {
 		proxy = new KeepassProxyAccess();
-		proxy.connect();
 	}
 
 	@Override
-	public boolean isSupported() { return true; }
+	public boolean isSupported() { return proxy.connect();}
 
 	@Override
-	public boolean isLocked() {
-		return false;
+	public boolean isLocked() {	return proxy.connectionAvailable();	}
+
+	@Override
+	public void storePassphrase(String vault, CharSequence password) throws KeychainAccessException {
+		vault = "https://" + vault;
+		if (!proxy.connectionAvailable() ||
+			!proxy.setLogin(vault, null, null, "Vault", password.toString(), "default", "default", "default")) {
+			throw new KeychainAccessException("Storing of the passphrase failed");
+		}
 	}
 
 	@Override
-	public void storePassphrase(String s, CharSequence charSequence) throws KeychainAccessException {
-
-	}
-
-	@Override
-	public char[] loadPassphrase(String s) throws KeychainAccessException {
-		return new char[0];
+	public char[] loadPassphrase(String vault) throws KeychainAccessException {
+		if (!proxy.connectionAvailable()) {
+			throw new KeychainAccessException("Loading of the passphrase failed");
+		}
+		vault = "https://" + vault;
+		Map<String, Object> answer = proxy.getLogins(vault, null, false, List.of(proxy.exportConnection()));
+		if (answer.isEmpty()) {
+			throw new KeychainAccessException("Loading of the passphrase failed");
+		}
+		List<Object> array = (ArrayList<Object>) answer.get("entries");
+		Map<String, Object> credentials = (HashMap<String, Object>) array.get(0);
+		String password;
+		if (credentials.get("password") != null) {
+			password = (String) credentials.get("password");
+			return password.toCharArray();
+		} else {
+			throw new KeychainAccessException("Loading of the passphrase failed");
+		}
 	}
 
 	@Override
