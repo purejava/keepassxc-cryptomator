@@ -30,8 +30,11 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 	@Override
 	public void storePassphrase(String vault, CharSequence password) throws KeychainAccessException {
 		vault = "https://" + vault;
-		if (!proxy.connectionAvailable() ||
-			!proxy.setLogin(vault, null, null, "Vault", password.toString(), "default", "default", "default")) {
+		if (!proxy.connectionAvailable()) {
+			throw new KeychainAccessException("Storing of the passphrase failed");
+		}
+		if (!proxy.loginExists(vault, null, false, List.of(proxy.exportConnection()), password.toString())
+		&& !proxy.setLogin(vault, null, null, "Vault", password.toString(), "default", "default", "default")) {
 			throw new KeychainAccessException("Storing of the passphrase failed");
 		}
 	}
