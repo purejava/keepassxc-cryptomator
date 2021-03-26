@@ -16,6 +16,7 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 
 	private static final Logger LOG = LoggerFactory.getLogger(KeePassXCAccess.class);
 	private KeepassProxyAccess proxy;
+	private final String URL_SCHEME = "https://";
 
 	public KeePassXCAccess() {
 		proxy = new KeepassProxyAccess();
@@ -29,7 +30,7 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 
 	@Override
 	public void storePassphrase(String vault, CharSequence password) throws KeychainAccessException {
-		vault = "https://" + vault;
+		vault = URL_SCHEME + vault;
 		if (!proxy.connectionAvailable()) {
 			throw new KeychainAccessException("Storing of the passphrase failed");
 		}
@@ -44,7 +45,7 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 		if (!proxy.connectionAvailable()) {
 			throw new KeychainAccessException("Loading of the passphrase failed");
 		}
-		vault = "https://" + vault;
+		vault = URL_SCHEME + vault;
 		Map<String, Object> answer = proxy.getLogins(vault, null, false, List.of(proxy.exportConnection()));
 		if (answer.isEmpty()) {
 			throw new KeychainAccessException("Loading of the passphrase failed");
