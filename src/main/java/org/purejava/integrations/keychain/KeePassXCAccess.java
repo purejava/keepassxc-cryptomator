@@ -23,15 +23,15 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 	}
 
 	@Override
-	public boolean isSupported() { return proxy.connect();}
+	public boolean isSupported() { return proxy.connect(); }
 
 	@Override
-	public boolean isLocked() {	return proxy.connectionAvailable();	}
+	public boolean isLocked() { return !proxy.connectionAvailable(); }
 
 	@Override
 	public void storePassphrase(String vault, CharSequence password) throws KeychainAccessException {
 		vault = URL_SCHEME + vault;
-		if (!proxy.connectionAvailable()) {
+		if (isLocked()) {
 			throw new KeychainAccessException("Storing of the passphrase failed");
 		}
 		if (!proxy.loginExists(vault, null, false, List.of(proxy.exportConnection()), password.toString())
@@ -42,7 +42,7 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 
 	@Override
 	public char[] loadPassphrase(String vault) throws KeychainAccessException {
-		if (!proxy.connectionAvailable()) {
+		if (isLocked()) {
 			throw new KeychainAccessException("Loading of the passphrase failed");
 		}
 		vault = URL_SCHEME + vault;
