@@ -26,7 +26,13 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 	public boolean isSupported() { return proxy.connect(); }
 
 	@Override
-	public boolean isLocked() { return !proxy.connectionAvailable(); }
+	public boolean isLocked() { return proxy.getDatabasehash().isEmpty(); }
+
+	@Override
+	public boolean needsAssociation() { return !proxy.connectionAvailable(); }
+
+	@Override
+	public boolean associate() { return proxy.associate(); }
 
 	@Override
 	public void storePassphrase(String vault, CharSequence password) throws KeychainAccessException {
