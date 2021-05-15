@@ -34,6 +34,8 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 	@Override
 	public boolean associate() { return proxy.associate(); }
 
+	public String unlock() { return proxy.getDatabasehash(true); }
+
 	@Override
 	public void storePassphrase(String vault, CharSequence password) throws KeychainAccessException {
 		vault = URL_SCHEME + vault;
