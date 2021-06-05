@@ -28,9 +28,13 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 	@Override
 	public boolean isLocked() { return proxy.getDatabasehash().isEmpty(); }
 
-	private boolean needsAssociation() { return !proxy.connectionAvailable(); }
-
-	private boolean associate() { return proxy.associate(); }
+	private void ensureAssociation() throws KeychainAccessException {
+		if (!proxy.connectionAvailable()) { // Proxy needs association
+			if (!proxy.associate()) {
+				throw new KeychainAccessException("Association with KeePassXC database failed");
+			}
+		}
+	}
 
 	public String unlock() { return proxy.getDatabasehash(true); }
 
@@ -40,6 +44,7 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 		if (isLocked()) {
 			throw new KeychainAccessException("Failed to store password. KeePassXC database is locked. Needs to be unlocked first");
 		}
+		ensureAssociation();
 		if (!proxy.loginExists(vault, null, false, List.of(proxy.exportConnection()), password.toString())
 		&& !proxy.setLogin(vault, null, null, "Vault", password.toString(), "default", "default", "default")) {
 			throw new KeychainAccessException("Storing of the password failed");
@@ -51,6 +56,7 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 		if (isLocked()) {
 			throw new KeychainAccessException("Failed to load password. KeePassXC database is locked. Needs to be unlocked first");
 		}
+		ensureAssociation();
 		vault = URL_SCHEME + vault;
 		var answer = proxy.getLogins(vault, null, false, List.of(proxy.exportConnection()));
 		if (answer.isEmpty() || null == answer.get("entries")) {
