@@ -28,11 +28,9 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 	@Override
 	public boolean isLocked() { return proxy.getDatabasehash().isEmpty(); }
 
-	@Override
-	public boolean needsAssociation() { return !proxy.connectionAvailable(); }
+	private boolean needsAssociation() { return !proxy.connectionAvailable(); }
 
-	@Override
-	public boolean associate() { return proxy.associate(); }
+	private boolean associate() { return proxy.associate(); }
 
 	public String unlock() { return proxy.getDatabasehash(true); }
 
@@ -40,23 +38,23 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 	public void storePassphrase(String vault, CharSequence password) throws KeychainAccessException {
 		vault = URL_SCHEME + vault;
 		if (isLocked()) {
-			throw new KeychainAccessException("Storing of the passphrase failed");
+			throw new KeychainAccessException("Failed to store password. KeePassXC database is locked. Needs to be unlocked first");
 		}
 		if (!proxy.loginExists(vault, null, false, List.of(proxy.exportConnection()), password.toString())
 		&& !proxy.setLogin(vault, null, null, "Vault", password.toString(), "default", "default", "default")) {
-			throw new KeychainAccessException("Storing of the passphrase failed");
+			throw new KeychainAccessException("Storing of the password failed");
 		}
 	}
 
 	@Override
 	public char[] loadPassphrase(String vault) throws KeychainAccessException {
 		if (isLocked()) {
-			throw new KeychainAccessException("Loading of the passphrase failed");
+			throw new KeychainAccessException("Failed to load password. KeePassXC database is locked. Needs to be unlocked first");
 		}
 		vault = URL_SCHEME + vault;
 		var answer = proxy.getLogins(vault, null, false, List.of(proxy.exportConnection()));
 		if (answer.isEmpty() || null == answer.get("entries")) {
-			throw new KeychainAccessException("Loading of the passphrase failed");
+			throw new KeychainAccessException("No password found for vault " + vault);
 		}
 		var array = (ArrayList<Object>) answer.get("entries");
 		var credentials = (HashMap<String, Object>) array.get(0);
@@ -64,7 +62,7 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 			var password = (String) credentials.get("password");
 			return password.toCharArray();
 		} else {
-			throw new KeychainAccessException("Loading of the passphrase failed");
+			throw new KeychainAccessException("Loading of the password failed");
 		}
 	}
 
