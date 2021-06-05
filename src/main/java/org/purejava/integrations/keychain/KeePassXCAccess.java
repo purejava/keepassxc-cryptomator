@@ -54,14 +54,14 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 			throw new KeychainAccessException("Loading of the passphrase failed");
 		}
 		vault = URL_SCHEME + vault;
-		Map<String, Object> answer = proxy.getLogins(vault, null, false, List.of(proxy.exportConnection()));
+		var answer = proxy.getLogins(vault, null, false, List.of(proxy.exportConnection()));
 		if (answer.isEmpty() || null == answer.get("entries")) {
 			throw new KeychainAccessException("Loading of the passphrase failed");
 		}
-		List<Object> array = (ArrayList<Object>) answer.get("entries");
-		Map<String, Object> credentials = (HashMap<String, Object>) array.get(0);
+		var array = (ArrayList<Object>) answer.get("entries");
+		var credentials = (HashMap<String, Object>) array.get(0);
 		if (credentials.get("password") != null) {
-			String password = (String) credentials.get("password");
+			var password = (String) credentials.get("password");
 			return password.toCharArray();
 		} else {
 			throw new KeychainAccessException("Loading of the passphrase failed");
