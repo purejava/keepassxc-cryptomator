@@ -60,7 +60,7 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 		vault = URL_SCHEME + vault;
 		var answer = proxy.getLogins(vault, null, false, List.of(proxy.exportConnection()));
 		if (answer.isEmpty() || null == answer.get("entries")) {
-			throw new KeychainAccessException("No password found for vault " + vault);
+			throw new KeychainAccessException("No password found for vault " + vault.substring(URL_SCHEME.length()));
 		}
 		var array = (ArrayList<Object>) answer.get("entries");
 		var credentials = (HashMap<String, Object>) array.get(0);
