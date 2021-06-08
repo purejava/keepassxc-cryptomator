@@ -23,6 +23,9 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 	}
 
 	@Override
+	public String displayName() { return "KeePassXC"; }
+
+	@Override
 	public boolean isSupported() { return proxy.connect(); }
 
 	@Override
