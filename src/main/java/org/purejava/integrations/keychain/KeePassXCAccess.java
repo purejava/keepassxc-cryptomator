@@ -78,8 +78,8 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 	}
 
 	@Override
-	public void deletePassphrase(String s) throws KeychainAccessException {
-
+	public void deletePassphrase(String vault) throws KeychainAccessException {
+		throw new KeychainAccessException("KeePassXC does not support deleting from Cryptomator. Please use the KeePassXC app UI.");
 	}
 
 	@Override
