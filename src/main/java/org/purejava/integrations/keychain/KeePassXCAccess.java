@@ -17,6 +17,7 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 	private static final Logger LOG = LoggerFactory.getLogger(KeePassXCAccess.class);
 	private KeepassProxyAccess proxy;
 	private final String URL_SCHEME = "https://";
+	private final String APP_NAME = "Cryptomator";
 
 	public KeePassXCAccess() {
 		proxy = new KeepassProxyAccess();
@@ -48,8 +49,9 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 			throw new KeychainAccessException("Failed to store password. KeePassXC database is locked. Needs to be unlocked first");
 		}
 		ensureAssociation();
+		var group = proxy.createNewGroup(APP_NAME); // Store passphrases in a group APP_NAME
 		if (!proxy.loginExists(vault, null, false, List.of(proxy.exportConnection()), password.toString())
-		&& !proxy.setLogin(vault, null, null, "Vault", password.toString(), "default", "default", "default")) {
+		&& !proxy.setLogin(vault, null, null, "Vault", password.toString(), APP_NAME, group.get("uuid"), null)) {
 			throw new KeychainAccessException("Storing of the password failed");
 		}
 	}
