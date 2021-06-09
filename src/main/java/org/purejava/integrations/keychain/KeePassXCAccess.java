@@ -44,12 +44,12 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 
 	@Override
 	public void storePassphrase(String vault, CharSequence password) throws KeychainAccessException {
-		vault = URL_SCHEME + vault;
 		if (isLocked()) {
 			throw new KeychainAccessException("Failed to store password. KeePassXC database is locked. Needs to be unlocked first");
 		}
 		ensureAssociation();
-		var group = proxy.createNewGroup(APP_NAME); // Store passphrases in a group APP_NAME
+		vault = URL_SCHEME + vault;
+		var group = proxy.createNewGroup(APP_NAME); // Store passphrase in group APP_NAME
 		if (!proxy.loginExists(vault, null, false, List.of(proxy.exportConnection()), password.toString())
 		&& !proxy.setLogin(vault, null, null, "Vault", password.toString(), APP_NAME, group.get("uuid"), null)) {
 			throw new KeychainAccessException("Storing of the password failed");
@@ -83,7 +83,22 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 	}
 
 	@Override
-	public void changePassphrase(String s, CharSequence charSequence) throws KeychainAccessException {
-
+	public void changePassphrase(String vault, CharSequence password) throws KeychainAccessException {
+		if (isLocked()) {
+			throw new KeychainAccessException("Failed to change password. KeePassXC database is locked. Needs to be unlocked first");
+		}
+		ensureAssociation();
+		vault = URL_SCHEME + vault;
+		var group = proxy.createNewGroup(APP_NAME); // Update passphrase in group APP_NAME
+		var answer = proxy.getLogins(vault, null, false, List.of(proxy.exportConnection()));
+		if (answer.isEmpty() || null == answer.get("entries")) {
+			throw new KeychainAccessException("No password found for vault " + vault.substring(URL_SCHEME.length()));
+		}
+		var array = (ArrayList<Object>) answer.get("entries");
+		var credentials = (HashMap<String, Object>) array.get(0);
+		var uuid = (String) credentials.get("uuid");
+		if (!proxy.setLogin(vault, null, null, "Vault", password.toString(), APP_NAME, group.get("uuid"), uuid)) {
+			throw new KeychainAccessException("Changing the password failed");
+		}
 	}
 }
