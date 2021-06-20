@@ -9,6 +9,9 @@
 
 Store Cryptomator vault passwords in KeePassXC
 
+# Documentation
+For documentation please take a look at the [Wiki](https://github.com/purejava/keepassxc-cryptomator/wiki).
+
 # Donation
 If you like this project, you can give me a cup of coffee :)
 
