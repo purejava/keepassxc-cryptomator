@@ -61,6 +61,7 @@ jobs:
         run: mvn -B -Dgpg.passphrase=${GPG_PASSPHRASE} -Dtest=org.purejava.integrations.keychain.KeePassXCAccessTest install --file pom.xml
         env:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
       - name: Load Release URL File from release job
         uses: actions/download-artifact@v1
         with:
@@ -80,6 +81,12 @@ jobs:
           value=`cat git_tag/git_tag.txt`
           echo ::set-output name=git_tag::$value
 
+      - name: Sign asset
+        run: |
+          gpg -b ./target/keepassxc-cryptomator-${{ steps.get_tag_info.outputs.git_tag }}.jar
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
       - name: Upload Release Asset
         id: upload-release-asset
         uses: actions/upload-release-asset@v1.0.1
@@ -90,3 +97,14 @@ jobs:
           asset_path: ./target/keepassxc-cryptomator-${{ steps.get_tag_info.outputs.git_tag }}.jar
           asset_name: keepassxc-cryptomator-${{ steps.get_tag_info.outputs.git_tag }}.jar
           asset_content_type: application/java-archive
+
+      - name: Upload signature file
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get_release_info.outputs.upload_url }}
+          asset_path: ./target/keepassxc-cryptomator-${{ steps.get_tag_info.outputs.git_tag }}.jar.sig
+          asset_name: keepassxc-cryptomator-${{ steps.get_tag_info.outputs.git_tag }}.jar.sig
+          asset_content_type: application/pgp-signature
