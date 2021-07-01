@@ -22,6 +22,6 @@ jobs:
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
       - name: Build with Maven
-        run: mvn -B -Dgpg.passphrase=${GPG_PASSPHRASE} -Dtest=org.purejava.integrations.keychain.KeePassXCAccessTest install --file pom.xml
+        run: mvn -B -Psign -Dgpg.passphrase=${GPG_PASSPHRASE} -Dtest=org.purejava.integrations.keychain.KeePassXCAccessTest install --file pom.xml
         env:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
