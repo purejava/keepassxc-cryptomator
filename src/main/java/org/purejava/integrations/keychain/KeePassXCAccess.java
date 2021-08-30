@@ -3,6 +3,8 @@ package org.purejava.integrations.keychain;
 import org.cryptomator.integrations.keychain.KeychainAccessException;
 import org.cryptomator.integrations.keychain.KeychainAccessProvider;
 import org.purejava.KeepassProxyAccess;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +12,8 @@ import java.util.List;
 
 
 public class KeePassXCAccess implements KeychainAccessProvider {
+
+	private static final Logger LOG = LoggerFactory.getLogger(KeePassXCAccess.class);
 
 	private KeepassProxyAccess proxy;
 	private final String URL_SCHEME = "https://";
@@ -53,7 +57,8 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 	@Override
 	public void storePassphrase(String vault, CharSequence password) throws KeychainAccessException {
 		if (isLocked()) {
-			throw new KeychainAccessException("Failed to store password. KeePassXC database is locked. Needs to be unlocked first");
+			LOG.info("Failed to store password. KeePassXC database is locked. Needs to be unlocked first");
+			return;
 		}
 		ensureAssociation();
 		var urlVault = URL_SCHEME + vault;
@@ -67,13 +72,15 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 	@Override
 	public char[] loadPassphrase(String vault) throws KeychainAccessException {
 		if (isLocked()) {
-			throw new KeychainAccessException("Failed to load password. KeePassXC database is locked. Needs to be unlocked first");
+			LOG.info("Failed to load password. KeePassXC database is locked. Needs to be unlocked first");
+			return null;
 		}
 		ensureAssociation();
 		var urlVault = URL_SCHEME + vault;
 		var answer = proxy.getLogins(urlVault, null, false, List.of(proxy.exportConnection()));
 		if (answer.isEmpty() || null == answer.get("entries")) {
-			throw new KeychainAccessException("No password found for vault " + urlVault.substring(URL_SCHEME.length()));
+			LOG.info("No password found for vault " + urlVault.substring(URL_SCHEME.length()));
+			return null;
 		}
 		var array = (ArrayList<Object>) answer.get("entries");
 		var credentials = (HashMap<String, Object>) array.get(0);
@@ -93,14 +100,16 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 	@Override
 	public void changePassphrase(String vault, CharSequence password) throws KeychainAccessException {
 		if (isLocked()) {
-			throw new KeychainAccessException("Failed to change password. KeePassXC database is locked. Needs to be unlocked first");
+			LOG.info("Failed to change password. KeePassXC database is locked. Needs to be unlocked first");
+			return;
 		}
 		ensureAssociation();
 		var urlVault = URL_SCHEME + vault;
 		var group = proxy.createNewGroup(APP_NAME); // Update passphrase in group APP_NAME
 		var answer = proxy.getLogins(urlVault, null, false, List.of(proxy.exportConnection()));
 		if (answer.isEmpty() || null == answer.get("entries")) {
-			throw new KeychainAccessException("No password found for vault " + urlVault.substring(URL_SCHEME.length()));
+			LOG.info("No password found for vault " + urlVault.substring(URL_SCHEME.length()));
+			return;
 		}
 		var array = (ArrayList<Object>) answer.get("entries");
 		var credentials = (HashMap<String, Object>) array.get(0);
