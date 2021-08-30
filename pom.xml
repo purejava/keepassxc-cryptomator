@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.purejava</groupId>
   <artifactId>keepassxc-cryptomator</artifactId>
-  <version>0.0.2</version>
+  <version>0.0.3</version>
 
   <name>keepassxc-cryptomator</name>
   <description>Store Cryptomator vault passwords in KeePassXC</description>
