@@ -98,7 +98,26 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 
 	@Override
 	public void deletePassphrase(String vault) throws KeychainAccessException {
-		throw new KeychainAccessException("KeePassXC does not support deleting from Cryptomator. Please use the KeePassXC app UI.");
+		if (isLocked()) {
+			LOG.info("Failed to delete password. KeePassXC database is locked. Needs to be unlocked first");
+			return;
+		}
+		ensureAssociation();
+		var urlVault = URL_SCHEME + vault;
+		var answer = proxy.getLogins(urlVault, null, false, List.of(proxy.exportConnection()));
+		if (answer.isEmpty() || null == answer.get("entries")) {
+			LOG.info("No password stored for vault " + urlVault.substring(URL_SCHEME.length()));
+			return;
+		}
+		var array = (ArrayList<Object>) answer.get("entries");
+		var credentials = (HashMap<String, Object>) array.get(0);
+		if (credentials.get("uuid") != null) {
+			var uuid = (String) credentials.get("uuid");
+			LOG.info(proxy.deleteEntry(uuid) ? "Password for vault " + urlVault.substring(URL_SCHEME.length()) + " deleted"
+					: "Deleting password for vault " + urlVault.substring(URL_SCHEME.length()) + " failed");
+		} else {
+			throw new KeychainAccessException("Couldn't retrieve uuid of the entry");
+		}
 	}
 
 	@Override

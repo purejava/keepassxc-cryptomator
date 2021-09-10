@@ -50,7 +50,7 @@
 
     <!-- runtime dependencies -->
     <api.version>1.0.0-rc1</api.version>
-    <keepassxc-proxy.version>0.0.4</keepassxc-proxy.version>
+    <keepassxc-proxy.version>0.0.5</keepassxc-proxy.version>
     <guava.version>30.0-jre</guava.version>
     <slf4j.version>1.7.30</slf4j.version>
     <junit.version>5.7.0</junit.version>
