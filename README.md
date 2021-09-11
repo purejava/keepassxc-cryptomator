@@ -3,7 +3,7 @@
 
 [![Java CI with Maven](https://github.com/purejava/keepassxc-cryptomator/workflows/Java%20CI%20with%20Maven/badge.svg)](https://github.com/purejava/keepassxc-cryptomator/actions?query=workflow%3A%22Java+CI+with+Maven%22)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/f092de6bfd99450f8a9a2766ed01c3c1)](https://app.codacy.com/gh/purejava/keepassxc-cryptomator?utm_source=github.com&utm_medium=referral&utm_content=purejava/keepassxc-cryptomator&utm_campaign=Badge_Grade_Settings)
-[![Maven Central](https://img.shields.io/maven-central/v/org.purejava/keepassxc-cryptomator.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22org.purejava%22%20AND%20a:%22keepassxc-cryptomator%22)
+[![GitHub Release](https://img.shields.io/github/v/release/purejava/keepassxc-cryptomator)](https://github.com/purejava/keepassxc-cryptomator/releases)
 [![License](https://img.shields.io/github/license/purejava/keepassxc-cryptomator.svg)](https://github.com/purejava/keepassxc-cryptomator/blob/master/LICENSE)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/donate?hosted_button_id=XVX9ZM7WE4ANL)
 

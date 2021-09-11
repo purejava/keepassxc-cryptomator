@@ -63,9 +63,13 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 		ensureAssociation();
 		var urlVault = URL_SCHEME + vault;
 		var group = proxy.createNewGroup(APP_NAME); // Store passphrase in group APP_NAME
-		if (!proxy.loginExists(urlVault, null, false, List.of(proxy.exportConnection()), password.toString())
-		&& !proxy.setLogin(urlVault, null, null, "Vault", password.toString(), APP_NAME, group.get("uuid"), null)) {
+		if (proxy.loginExists(urlVault, null, false, List.of(proxy.exportConnection()), password.toString())) {
+			return;
+		}
+		if (!proxy.setLogin(urlVault, null, null, "Vault", password.toString(), APP_NAME, group.get("uuid"), null)) {
 			throw new KeychainAccessException("Storing of the password failed");
+		} else {
+			LOG.info("Password successfully stored for vault " + urlVault.substring(URL_SCHEME.length()));
 		}
 	}
 
@@ -94,7 +98,26 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 
 	@Override
 	public void deletePassphrase(String vault) throws KeychainAccessException {
-		throw new KeychainAccessException("KeePassXC does not support deleting from Cryptomator. Please use the KeePassXC app UI.");
+		if (isLocked()) {
+			LOG.info("Failed to delete password. KeePassXC database is locked. Needs to be unlocked first");
+			return;
+		}
+		ensureAssociation();
+		var urlVault = URL_SCHEME + vault;
+		var answer = proxy.getLogins(urlVault, null, false, List.of(proxy.exportConnection()));
+		if (answer.isEmpty() || null == answer.get("entries")) {
+			LOG.info("No password stored for vault " + urlVault.substring(URL_SCHEME.length()));
+			return;
+		}
+		var array = (ArrayList<Object>) answer.get("entries");
+		var credentials = (HashMap<String, Object>) array.get(0);
+		if (credentials.get("uuid") != null) {
+			var uuid = (String) credentials.get("uuid");
+			LOG.info(proxy.deleteEntry(uuid) ? "Password for vault " + urlVault.substring(URL_SCHEME.length()) + " deleted"
+					: "Deleting password for vault " + urlVault.substring(URL_SCHEME.length()) + " failed");
+		} else {
+			throw new KeychainAccessException("Couldn't retrieve uuid of the entry");
+		}
 	}
 
 	@Override
