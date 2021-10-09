@@ -63,10 +63,11 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 		ensureAssociation();
 		var urlVault = URL_SCHEME + vault;
 		var group = proxy.createNewGroup(APP_NAME); // Store passphrase in group APP_NAME
-		if (proxy.loginExists(urlVault, null, false, List.of(proxy.exportConnection()), password.toString())) {
+		var login = proxy.loginExists(urlVault, null, false, List.of(proxy.exportConnection()), password.toString());
+		if (login.isFound() && null != login.getUuid() && !login.getUuid().isBlank()) {
 			return;
 		}
-		if (!proxy.setLogin(urlVault, null, null, "Vault", password.toString(), APP_NAME, group.get("uuid"), null)) {
+		if (!proxy.setLogin(urlVault, null, null, "Vault", password.toString(), APP_NAME, group.get("uuid"), login.getUuid())) {
 			throw new KeychainAccessException("Storing of the password failed");
 		} else {
 			LOG.info("Password successfully stored for vault " + urlVault.substring(URL_SCHEME.length()));
