@@ -51,9 +51,9 @@
     <!-- runtime dependencies -->
     <api.version>1.0.0</api.version>
     <keepassxc-proxy.version>0.0.6</keepassxc-proxy.version>
-    <guava.version>30.0-jre</guava.version>
-    <slf4j.version>1.7.30</slf4j.version>
-    <junit.version>5.7.0</junit.version>
+    <guava.version>31.0.1-jre</guava.version>
+    <slf4j.version>1.7.32</slf4j.version>
+    <junit.version>5.8.1</junit.version>
   </properties>
 
   <dependencies>
