@@ -56,6 +56,11 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 
 	@Override
 	public void storePassphrase(String vault, CharSequence password) throws KeychainAccessException {
+		storePassphrase(vault, "Vault", password);
+	}
+
+	@Override
+	public void storePassphrase(String vault, String name, CharSequence password) throws KeychainAccessException {
 		if (isLocked()) {
 			LOG.info("Failed to store password. KeePassXC database is locked. Needs to be unlocked first");
 			return;
@@ -67,10 +72,10 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 		if (login.isFound() && null != login.getUuid() && !login.getUuid().isBlank()) {
 			return;
 		}
-		if (!proxy.setLogin(urlVault, null, null, "Vault", password.toString(), APP_NAME, group.get("uuid"), login.getUuid())) {
+		if (!proxy.setLogin(urlVault, null, null, name, password.toString(), APP_NAME, group.get("uuid"), null)) {
 			throw new KeychainAccessException("Storing of the password failed");
 		} else {
-			LOG.info("Password successfully stored for vault " + urlVault.substring(URL_SCHEME.length()));
+			LOG.info("Password successfully stored for vault {}", urlVault.substring(URL_SCHEME.length()));
 		}
 	}
 
@@ -84,7 +89,7 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 		var urlVault = URL_SCHEME + vault;
 		var answer = proxy.getLogins(urlVault, null, false, List.of(proxy.exportConnection()));
 		if (answer.isEmpty() || null == answer.get("entries")) {
-			LOG.info("No password found for vault " + urlVault.substring(URL_SCHEME.length()));
+			LOG.info("No password found for vault {}", urlVault.substring(URL_SCHEME.length()));
 			return null;
 		}
 		var array = (ArrayList<Object>) answer.get("entries");
@@ -107,15 +112,15 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 		var urlVault = URL_SCHEME + vault;
 		var answer = proxy.getLogins(urlVault, null, false, List.of(proxy.exportConnection()));
 		if (answer.isEmpty() || null == answer.get("entries")) {
-			LOG.info("No password stored for vault " + urlVault.substring(URL_SCHEME.length()));
+			LOG.info("No password stored for vault {}", urlVault.substring(URL_SCHEME.length()));
 			return;
 		}
 		var array = (ArrayList<Object>) answer.get("entries");
 		var credentials = (HashMap<String, Object>) array.get(0);
 		if (credentials.get("uuid") != null) {
 			var uuid = (String) credentials.get("uuid");
-			LOG.info(proxy.deleteEntry(uuid) ? "Password for vault " + urlVault.substring(URL_SCHEME.length()) + " deleted"
-					: "Deleting password for vault " + urlVault.substring(URL_SCHEME.length()) + " failed");
+			LOG.info(proxy.deleteEntry(uuid) ? "Password for vault {} deleted"
+					: "Deleting password for vault {} failed", urlVault.substring(URL_SCHEME.length()));
 		} else {
 			throw new KeychainAccessException("Couldn't retrieve uuid of the entry");
 		}
@@ -123,6 +128,11 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 
 	@Override
 	public void changePassphrase(String vault, CharSequence password) throws KeychainAccessException {
+		changePassphrase(vault, "Vault", password);
+	}
+
+	@Override
+	public void changePassphrase(String vault, String name, CharSequence password) throws KeychainAccessException {
 		if (isLocked()) {
 			LOG.info("Failed to change password. KeePassXC database is locked. Needs to be unlocked first");
 			return;
@@ -132,13 +142,13 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 		var group = proxy.createNewGroup(APP_NAME); // Update passphrase in group APP_NAME
 		var answer = proxy.getLogins(urlVault, null, false, List.of(proxy.exportConnection()));
 		if (answer.isEmpty() || null == answer.get("entries")) {
-			LOG.info("No password found for vault " + urlVault.substring(URL_SCHEME.length()));
+			LOG.info("No password found for vault {}", urlVault.substring(URL_SCHEME.length()));
 			return;
 		}
 		var array = (ArrayList<Object>) answer.get("entries");
 		var credentials = (HashMap<String, Object>) array.get(0);
 		var uuid = (String) credentials.get("uuid");
-		if (!proxy.setLogin(urlVault, null, null, "Vault", password.toString(), APP_NAME, group.get("uuid"), uuid)) {
+		if (!proxy.setLogin(urlVault, null, null, name, password.toString(), APP_NAME, group.get("uuid"), uuid)) {
 			throw new KeychainAccessException("Changing the password failed");
 		}
 	}
