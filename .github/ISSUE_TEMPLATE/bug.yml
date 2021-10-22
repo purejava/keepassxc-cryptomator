@@ -25,6 +25,7 @@ body:
           - Operating System: Windows 10
           - Cryptomator: 1.6.1
           - keepassxc-cryptomator-0.0.3.jar
+          - KeePassXC: 2.6.6
       value: |
           - Operating System:
           - Cryptomator:
