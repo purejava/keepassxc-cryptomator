@@ -73,7 +73,7 @@ jobs:
           value=`cat release_url/release_url.txt`
           echo ::set-output name=upload_url::$value
       - name: Load git tag from release job
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v1
         with:
           name: git_tag
       - name: Get git tag info
