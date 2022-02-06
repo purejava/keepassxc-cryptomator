@@ -22,9 +22,9 @@ body:
       label: What software is involved?
       description: |
         Examples:
-          - Operating System: Windows 10
-          - Cryptomator: 1.6.1
-          - keepassxc-cryptomator-0.0.3.jar
+          - Operating System: Windows 11
+          - Cryptomator: 1.6.5
+          - keepassxc-cryptomator-1.0.1.jar
           - KeePassXC: 2.6.6
       value: |
           - Operating System:
