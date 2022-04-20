@@ -124,6 +124,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.get_release_info.outputs.upload_url }}
-          asset_path: ./target/keepassxc-cryptomator-${{ steps.get_tag_info.outputs.git_tag }}.tar.gz.sig
+          asset_path: ./keepassxc-cryptomator-${{ steps.get_tag_info.outputs.git_tag }}.tar.gz.sig
           asset_name: keepassxc-cryptomator-${{ steps.get_tag_info.outputs.git_tag }}.tar.gz.sig
           asset_content_type: application/pgp-signature
