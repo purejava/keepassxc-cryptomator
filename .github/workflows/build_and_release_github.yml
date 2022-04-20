@@ -107,7 +107,7 @@ jobs:
           asset_content_type: application/java-archive
 
       - name: Upload signature file for uber jar
-        id: upload-signature-file for uber jar
+        id: upload-signature-file-for-uber-jar
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -118,7 +118,7 @@ jobs:
           asset_content_type: application/pgp-signature
 
       - name: Upload signature file for source tarball
-        id: upload-signature-file for source tarball
+        id: upload-signature-file-for-source-tarball
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
