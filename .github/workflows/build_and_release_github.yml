@@ -91,7 +91,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         run: |
           git archive --prefix="keepassxc-cryptomator-${{ github.ref_name }}/" -o "keepassxc-cryptomator-${{ github.ref_name }}.tar.gz" ${{ github.ref }}
-          echo "${GPG_PASSPHRASE}" | gpg --batch --quiet --passphrase-fd 0 --pinentry-mode loopback -u 615D449FE6E6A235 --detach-sign -a keepassxc-cryptomator-*.tar.gz
+          echo "${GPG_PASSPHRASE}" | gpg --batch --quiet --passphrase-fd 0 --pinentry-mode loopback -u 5BFB2076ABC48776 --detach-sign -a keepassxc-cryptomator-*.tar.gz
         env:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
