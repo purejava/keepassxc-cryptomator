@@ -7,7 +7,7 @@
 [![License](https://img.shields.io/github/license/purejava/keepassxc-cryptomator.svg)](https://github.com/purejava/keepassxc-cryptomator/blob/master/LICENSE)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/donate?hosted_button_id=XVX9ZM7WE4ANL)
 
-Store Cryptomator vault passwords in KeePassXC
+Plug-in for Cryptomator to store vault passwords in KeePassXC
 
 # Documentation
 For documentation please take a look at the [Wiki](https://github.com/purejava/keepassxc-cryptomator/wiki).
