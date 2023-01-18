@@ -54,8 +54,7 @@ jobs:
           cache: 'maven'
       - name: Set up GPG
         run: |
-          echo "$GPG_PRIVATE_KEY" > private.asc
-          gpg --import --batch private.asc
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
       - name: Build with Maven
@@ -82,9 +81,9 @@ jobs:
           value=`cat git_tag/git_tag.txt`
           echo ::set-output name=git_tag::$value
 
-      - name: Sign uber jar
+      - name: Sign uber jar with key 5BFB2076ABC48776
         run: |
-          gpg -b ./target/keepassxc-cryptomator-${{ steps.get_tag_info.outputs.git_tag }}.jar
+          echo "${GPG_PASSPHRASE}" | gpg --batch --quiet --passphrase-fd 0 --pinentry-mode loopback -u 5BFB2076ABC48776 --detach-sign ./target/keepassxc-cryptomator-${{ steps.get_tag_info.outputs.git_tag }}.jar
         env:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
       - name: Sign source tarball with key 5BFB2076ABC48776
