@@ -18,8 +18,7 @@ jobs:
           cache: 'maven'
       - name: Set up GPG
         run: |
-          echo "$GPG_PRIVATE_KEY" > private.asc
-          gpg --import --batch private.asc
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
       - name: Build with Maven
