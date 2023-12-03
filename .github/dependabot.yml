@@ -1,11 +1,36 @@
-# To get started with Dependabot version updates, you'll need to specify which
-# package ecosystems to update and where the package manifests are located.
-# Please see the documentation for all configuration options:
-# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
-
 version: 2
 updates:
   - package-ecosystem: "maven"
-    directory: "/" # Location of package manifests
+    directory: "/"
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Etc/UTC"
+    groups:
+      java-test-dependencies:
+        patterns:
+          - "org.junit.jupiter:*"
+      maven-build-plugins:
+        patterns:
+          - "org.apache.maven.plugins:*"
+          - "org.sonatype.plugins:*"
+      java-production-dependencies:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "org.openjfx:*"
+          - "org.apache.maven.plugins:*"
+          - "org.junit.jupiter:*"
+          - "org.sonatype.plugins:*"
+
+  - package-ecosystem: "github-actions"
+    directory: "/" # even for `.github/workflows`
+    schedule:
+      interval: "monthly"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+    labels:
+      - "misc:ci"
