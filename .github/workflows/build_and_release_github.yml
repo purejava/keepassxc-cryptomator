@@ -12,7 +12,7 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
     steps:
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: create release
         id: create_release
         uses: actions/create-release@v1
@@ -26,16 +26,16 @@ jobs:
       - name: Output Release URL File
         run: echo "${{ steps.create_release.outputs.upload_url }}" > release_url.txt
       - name: Save Release URL file for publish
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: release_url
           path: release_url.txt
-      - uses: little-core-labs/get-git-tag@v3.0.1
+      - uses: little-core-labs/get-git-tag@v3.0.2
         id: tagName
       - name: Output git tag
         run: echo "${{ steps.tagName.outputs.tag }}" > git_tag.txt
       - name: Save git tag file for publish
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: git_tag
           path: git_tag.txt
@@ -46,8 +46,8 @@ jobs:
     name: build_and_upload
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -63,7 +63,7 @@ jobs:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Load Release URL File from release job
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v3
         with:
           name: release_url
       - name: Get Release File Name & Upload URL
@@ -72,7 +72,7 @@ jobs:
           value=`cat release_url/release_url.txt`
           echo ::set-output name=upload_url::$value
       - name: Load git tag from release job
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v3
         with:
           name: git_tag
       - name: Get git tag info
@@ -96,7 +96,7 @@ jobs:
 
       - name: Upload uber jar
         id: upload-release-asset
-        uses: actions/upload-release-asset@v1.0.1
+        uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -107,7 +107,7 @@ jobs:
 
       - name: Upload signature file for uber jar
         id: upload-signature-file-for-uber-jar
-        uses: actions/upload-release-asset@v1.0.1
+        uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -118,7 +118,7 @@ jobs:
 
       - name: Upload tarball
         id: upload-release-asset-2
-        uses: actions/upload-release-asset@v1.0.1
+        uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -129,7 +129,7 @@ jobs:
 
       - name: Upload signature file for source tarball
         id: upload-signature-file-for-source-tarball
-        uses: actions/upload-release-asset@v1.0.1
+        uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
