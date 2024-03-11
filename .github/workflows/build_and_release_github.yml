@@ -69,7 +69,7 @@ jobs:
       - name: Get Release File Name & Upload URL
         id: get_release_info
         run: |
-          value=`cat release_url/release_url.txt`
+          value=`cat release_url.txt`
           echo ::set-output name=upload_url::$value
       - name: Load git tag from release job
         uses: actions/download-artifact@v4
@@ -78,7 +78,7 @@ jobs:
       - name: Get git tag info
         id: get_tag_info
         run: |
-          value=`cat git_tag/git_tag.txt`
+          value=`cat git_tag.txt`
           echo ::set-output name=git_tag::$value
 
       - name: Sign uber jar with key 5BFB2076ABC48776
