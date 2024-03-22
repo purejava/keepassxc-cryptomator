@@ -30,7 +30,7 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 	public boolean isSupported() { return proxy.connect(); }
 
 	@Override
-	public boolean isLocked() { return proxy.getDatabasehash().isEmpty(); }
+	public boolean isLocked() { return proxy.isDatabaseLocked(); }
 
 	/**
 	 * Called on every request sent to the KeePassXC back end to associate Cryptomator and KeePassXC,
@@ -52,7 +52,9 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 	 *
 	 * @return The database hash of the current active KeePassXC database.
 	 */
-	public String unlock() { return proxy.getDatabasehash(true); }
+	public String unlock() {
+		return proxy.getDatabasehash(true).orElse("");
+	}
 
 	@Override
 	public void storePassphrase(String vault, CharSequence password) throws KeychainAccessException {
