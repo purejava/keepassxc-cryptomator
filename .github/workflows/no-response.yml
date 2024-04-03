@@ -1,19 +1,22 @@
-name: No Response
+# Configuration for close-stale-issues - https://github.com/marketplace/actions/close-stale-issues
 
-# Both `issue_comment` and `scheduled` event types are required for this Action
-# to work properly.
+name: 'Close awaiting response issues'
 on:
-  issue_comment:
-    types: [created]
   schedule:
-    # Schedule for 6 o'clock, every day
-    - cron: '0 6 * * *'
+    - cron: '00 06 * * *'
 
 jobs:
-  noResponse:
+  no-response:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
     steps:
-      - uses: lee-dohm/no-response@v0.5.0
+      - uses: actions/stale@v8
         with:
-          token: ${{ github.token }}
-          daysUntilClose: 14
+          days-before-stale: 14
+          days-before-close: 0
+          days-before-pr-close: -1
+          stale-issue-label: 'stale'
+          close-issue-message: "This issue has been automatically closed because the original author has not responded to our request for more information. With the information currently in the issue, we don't have enough information to take action. Please contact us if you have or find the answers we need so that we can investigate further."
+          only-labels: 'more-information-needed'
