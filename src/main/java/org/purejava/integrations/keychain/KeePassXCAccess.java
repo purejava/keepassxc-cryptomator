@@ -57,12 +57,12 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 	}
 
 	@Override
-	public void storePassphrase(String vault, CharSequence password) throws KeychainAccessException {
-		storePassphrase(vault, "Vault", password);
+	public void storePassphrase(String vault, String displayName, CharSequence password) throws KeychainAccessException {
+		storePassphrase(vault, "Vault", password, false);
 	}
 
 	@Override
-	public void storePassphrase(String vault, String name, CharSequence password) throws KeychainAccessException {
+	public void storePassphrase(String vault, String name, CharSequence password, boolean requireOsAuthentication) throws KeychainAccessException {
 		if (isLocked()) {
 			LOG.info("Failed to store password. KeePassXC database is locked. Needs to be unlocked first.");
 			return;
