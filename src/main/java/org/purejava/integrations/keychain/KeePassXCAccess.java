@@ -15,7 +15,7 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 
 	private static final Logger LOG = LoggerFactory.getLogger(KeePassXCAccess.class);
 
-	private KeepassProxyAccess proxy;
+	private final KeepassProxyAccess proxy;
 	private final String URL_SCHEME = "https://";
 	private final String APP_NAME = "Cryptomator";
 
@@ -65,6 +65,7 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 	public void storePassphrase(String vault, String name, CharSequence password, boolean requireOsAuthentication) throws KeychainAccessException {
 		if (isLocked()) {
 			LOG.info("Failed to store password. KeePassXC database is locked. Needs to be unlocked first.");
+			unlock();
 			return;
 		}
 		ensureAssociation();
@@ -85,6 +86,7 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 	public char[] loadPassphrase(String vault) throws KeychainAccessException {
 		if (isLocked()) {
 			LOG.info("Failed to load password. KeePassXC database is locked. Needs to be unlocked first.");
+			unlock();
 			return null;
 		}
 		ensureAssociation();
@@ -108,6 +110,7 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 	public void deletePassphrase(String vault) throws KeychainAccessException {
 		if (isLocked()) {
 			LOG.info("Failed to delete password. KeePassXC database is locked. Needs to be unlocked first.");
+			unlock();
 			return;
 		}
 		ensureAssociation();
@@ -137,6 +140,7 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 	public void changePassphrase(String vault, String name, CharSequence password) throws KeychainAccessException {
 		if (isLocked()) {
 			LOG.info("Failed to change password. KeePassXC database is locked. Needs to be unlocked first.");
+			unlock();
 			return;
 		}
 		ensureAssociation();
