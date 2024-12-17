@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.purejava</groupId>
   <artifactId>keepassxc-cryptomator</artifactId>
-  <version>1.2.7-SNAPSHOT</version>
+  <version>1.2.7</version>
 
   <name>keepassxc-cryptomator</name>
   <description>Plug-in for Cryptomator to store vault passwords in KeePassXC</description>
@@ -50,7 +50,7 @@
 
     <!-- runtime dependencies -->
     <api.version>1.4.0</api.version>
-    <keepassxc-proxy.version>1.2.6</keepassxc-proxy.version>
+    <keepassxc-proxy.version>1.2.7</keepassxc-proxy.version>
     <guava.version>33.3.1-jre</guava.version>
     <slf4j.version>2.0.16</slf4j.version>
     <junit.version>5.11.3</junit.version>

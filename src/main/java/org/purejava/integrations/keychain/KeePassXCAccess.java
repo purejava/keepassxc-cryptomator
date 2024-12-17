@@ -58,7 +58,7 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 
 	@Override
 	public void storePassphrase(String vault, String displayName, CharSequence password) throws KeychainAccessException {
-		storePassphrase(vault, "Vault", password, false);
+		storePassphrase(vault, displayName, password, false);
 	}
 
 	@Override
