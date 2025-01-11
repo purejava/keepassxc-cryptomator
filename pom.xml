@@ -49,7 +49,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <!-- runtime dependencies -->
-    <api.version>1.4.0</api.version>
+    <api.version>1.5.0</api.version>
     <keepassxc-proxy.version>1.2.7</keepassxc-proxy.version>
     <guava.version>33.4.0-jre</guava.version>
     <slf4j.version>2.0.16</slf4j.version>
