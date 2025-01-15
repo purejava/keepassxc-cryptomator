@@ -1,4 +1,4 @@
-name: Java CI with Maven
+name: Java CI with Gradle
 
 on:
   push:
@@ -41,3 +41,4 @@ jobs:
         env:
           GPG_SIGNING_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
           GPG_SIGNING_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          RELEASE_GRADLE_PLUGIN_TOKEN: ${{ secrets.RELEASE_GRADLE_PLUGIN_TOKEN }}
