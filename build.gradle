@@ -1,0 +1,141 @@
+plugins {
+    id 'com.gradleup.shadow' version '8.3.0'
+    id 'com.github.breadmoirai.github-release' version '2.5.2'
+    id 'com.palantir.git-version' version '3.1.0'
+    id 'java'
+    id 'java-library'
+    id 'signing'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    api libs.org.cryptomator.integrations.api
+    api libs.org.slf4j.slf4j.api
+    api libs.org.purejava.keepassxc.proxy.access
+    testImplementation libs.org.slf4j.slf4j.simple
+    testImplementation libs.org.junit.jupiter.junit.jupiter.api
+    testImplementation libs.org.junit.jupiter.junit.jupiter.engine
+    testImplementation libs.org.junit.jupiter.junit.jupiter
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+group = 'org.purejava'
+version gitVersion() // version set by the plugin, based on the Git tag
+description = 'Plug-in for Cryptomator to store vault passwords in KeePassXC'
+java.sourceCompatibility = JavaVersion.VERSION_17
+
+def releaseGradlePluginToken = System.getenv("RELEASE_GRADLE_PLUGIN_TOKEN")
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+test {
+    useJUnitPlatform()
+    filter {
+        includeTestsMatching "KeePassXCAccessTest"
+    }
+}
+
+/*
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from(components.java)
+            pom {
+                name = 'keepassxc-cryptomator'
+                description = 'Plug-in for Cryptomator to store vault passwords in KeePassXC'
+                url = 'https://github.com/purejava/keepassxc-cryptomator'
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://opensource.org/licenses/MIT'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'purejava'
+                        name = 'Ralph Plawetzki'
+                        email = 'ralph@purejava.org'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/purejava/keepassxc-cryptomator.git'
+                    developerConnection = 'scm:git:ssh://github.com/purejava/keepassxc-cryptomator.git'
+                    url = 'https://github.com/purejava/keepassxc-cryptomator/tree/main'
+                }
+                issueManagement {
+                    system = 'GitHub Issues'
+                    url = 'https://github.com/purejava/keepassxc-cryptomator/issues'
+                }
+            }
+        }
+    }
+}
+*/
+
+tasks.named('shadowJar', com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar) {
+    archiveClassifier.set('')
+}
+
+// Delete the original JAR before creating the shadow JAR
+tasks.register('prepareShadowJar', Delete) {
+    delete tasks.named('jar').get().archiveFile.get().asFile
+}
+
+tasks.named('shadowJar') {
+    dependsOn('prepareShadowJar')
+}
+
+tasks.named('githubRelease') {
+    dependsOn('shadowJar')
+    dependsOn('sourcesJar')
+    dependsOn('javadocJar')
+    dependsOn('signArchives')
+}
+
+artifacts {
+    archives tasks.named('shadowJar')
+    archives tasks.named('sourcesJar')
+}
+
+signing {
+    useGpgCmd()
+    // Sign both the sources JAR and the shadow JAR
+    sign configurations.archives
+}
+
+javadoc {
+    if(JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
+
+githubRelease {
+    setToken(releaseGradlePluginToken)
+    setTagName("$project.version")
+    setReleaseName("$project.version")
+    setTargetCommitish('main')
+    setDraft(true)
+    setBody("[![Downloads](https://img.shields.io/github/downloads/purejava/keepassxc-cryptomator/latest/keepassxc-cryptomator-${project.version}.jar)](https://github.com/purejava/keepassxc-cryptomator/releases/latest/download/keepassxc-cryptomator-${project.version}.jar)\n" +
+            "\n" +
+            "- xxx")
+    releaseAssets = fileTree(dir: "${buildDir}/libs", includes: [
+            "keepassxc-cryptomator-${version}.jar",
+            "keepassxc-cryptomator-${version}.jar.asc",
+            "keepassxc-cryptomator-${version}-sources.jar",
+            "keepassxc-cryptomator-${version}-sources.jar.asc"
+    ]).files
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(Javadoc) {
+    options.encoding = 'UTF-8'
+}

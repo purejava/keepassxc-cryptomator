@@ -11,129 +11,41 @@ jobs:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-      - name: create release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
-          draft: true
-          prerelease: false
-      - name: Output Release URL File
-        run: echo "${{ steps.create_release.outputs.upload_url }}" > release_url.txt
-      - name: Save Release URL file for publish
-        uses: actions/upload-artifact@v4
-        with:
-          name: release_url
-          path: release_url.txt
-      - uses: little-core-labs/get-git-tag@v3.0.2
-        id: tagName
-      - name: Output git tag
-        run: echo "${{ steps.tagName.outputs.tag }}" > git_tag.txt
-      - name: Save git tag file for publish
-        uses: actions/upload-artifact@v4
-        with:
-          name: git_tag
-          path: git_tag.txt
-
-
-  build_and_upload:
-    needs: createrelease
-    name: build_and_upload
-    runs-on: ubuntu-latest
-    steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
-          cache: 'maven'
-      - name: Set up GPG
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Import GPG key
         run: |
-          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+          echo "$GPG_SIGNING_KEY_PW" | gpg --batch --import --yes --passphrase-fd 0 <(echo -n "$GPG_SIGNING_KEY_B64" | base64 --decode)
         env:
-          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-      - name: Build with Maven
-        run: mvn -B -Psign -Dgpg.passphrase=${GPG_PASSPHRASE} -Dtest=org.purejava.integrations.keychain.KeePassXCAccessTest install --file pom.xml
-        env:
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          GPG_SIGNING_KEY_B64: ${{ secrets.GPG_PRIVATE_KEY_B64 }}
+          GPG_SIGNING_KEY_PW: ${{ secrets.GPG_PASSPHRASE }}
 
-      - name: Load Release URL File from release job
-        uses: actions/download-artifact@v4
-        with:
-          name: release_url
-      - name: Get Release File Name & Upload URL
-        id: get_release_info
+      - name: Setup GPG key information
         run: |
-          value=`cat release_url.txt`
-          echo ::set-output name=upload_url::$value
-      - name: Load git tag from release job
-        uses: actions/download-artifact@v4
-        with:
-          name: git_tag
-      - name: Get git tag info
-        id: get_tag_info
-        run: |
-          value=`cat git_tag.txt`
-          echo ::set-output name=git_tag::$value
+          mkdir -p ~/.gradle ~/.gnupg
+          echo "signing.gnupg.homeDir=/home/runner/.gnupg" >> ~/.gradle/gradle.properties
+          echo "signing.gnupg.executable=gpg" >> ~/.gradle/gradle.properties
+          echo "signing.gnupg.keyName=ABC48776" >> ~/.gradle/gradle.properties
+          echo "signing.gnupg.passphrase=${GPG_SIGNING_KEY_PW}" >> ~/.gradle/gradle.properties
+        env:
+          GPG_SIGNING_KEY_PW: ${{ secrets.GPG_PASSPHRASE }}
 
-      - name: Sign uber jar with key 5BFB2076ABC48776
-        run: |
-          echo "${GPG_PASSPHRASE}" | gpg --batch --quiet --passphrase-fd 0 --pinentry-mode loopback -u 5BFB2076ABC48776 --detach-sign ./target/keepassxc-cryptomator-${{ steps.get_tag_info.outputs.git_tag }}.jar
+      - name: Build package
+        run: ./gradlew clean build
         env:
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-      - name: Sign source tarball with key 5BFB2076ABC48776
-        if: startsWith(github.ref, 'refs/tags/')
-        run: |
-          git archive --prefix="keepassxc-cryptomator-${{ github.ref_name }}/" -o "keepassxc-cryptomator-${{ github.ref_name }}.tar.gz" ${{ github.ref }}
-          echo "${GPG_PASSPHRASE}" | gpg --batch --quiet --passphrase-fd 0 --pinentry-mode loopback -u 5BFB2076ABC48776 --detach-sign keepassxc-cryptomator-*.tar.gz
-        env:
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          GPG_SIGNING_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_SIGNING_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
-      - name: Upload uber jar
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1.0.2
+      - name: Release package
+        run: ./gradlew githubRelease
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.get_release_info.outputs.upload_url }}
-          asset_path: ./target/keepassxc-cryptomator-${{ steps.get_tag_info.outputs.git_tag }}.jar
-          asset_name: keepassxc-cryptomator-${{ steps.get_tag_info.outputs.git_tag }}.jar
-          asset_content_type: application/java-archive
-
-      - name: Upload signature file for uber jar
-        id: upload-signature-file-for-uber-jar
-        uses: actions/upload-release-asset@v1.0.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.get_release_info.outputs.upload_url }}
-          asset_path: ./target/keepassxc-cryptomator-${{ steps.get_tag_info.outputs.git_tag }}.jar.sig
-          asset_name: keepassxc-cryptomator-${{ steps.get_tag_info.outputs.git_tag }}.jar.sig
-          asset_content_type: application/pgp-signature
-
-      - name: Upload tarball
-        id: upload-release-asset-2
-        uses: actions/upload-release-asset@v1.0.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.get_release_info.outputs.upload_url }}
-          asset_path: ./keepassxc-cryptomator-${{ steps.get_tag_info.outputs.git_tag }}.tar.gz
-          asset_name: keepassxc-cryptomator-${{ steps.get_tag_info.outputs.git_tag }}.tar.gz
-          asset_content_type: application/tar+gzip
-
-      - name: Upload signature file for source tarball
-        id: upload-signature-file-for-source-tarball
-        uses: actions/upload-release-asset@v1.0.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.get_release_info.outputs.upload_url }}
-          asset_path: ./keepassxc-cryptomator-${{ steps.get_tag_info.outputs.git_tag }}.tar.gz.sig
-          asset_name: keepassxc-cryptomator-${{ steps.get_tag_info.outputs.git_tag }}.tar.gz.sig
-          asset_content_type: application/pgp-signature
+          GPG_SIGNING_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_SIGNING_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}

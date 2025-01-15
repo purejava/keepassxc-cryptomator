@@ -6,22 +6,38 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
-          cache: 'maven'
-      - name: Set up GPG
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Import GPG key
         run: |
-          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+          echo "$GPG_SIGNING_KEY_PW" | gpg --batch --import --yes --passphrase-fd 0 <(echo -n "$GPG_SIGNING_KEY_B64" | base64 --decode)
         env:
-          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-      - name: Build with Maven
-        run: mvn -B -Psign -Dgpg.passphrase=${GPG_PASSPHRASE} -Dtest=org.purejava.integrations.keychain.KeePassXCAccessTest install --file pom.xml
+          GPG_SIGNING_KEY_B64: ${{ secrets.GPG_PRIVATE_KEY_B64 }}
+          GPG_SIGNING_KEY_PW: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Setup GPG key information
+        run: |
+          mkdir -p ~/.gradle ~/.gnupg
+          echo "signing.gnupg.homeDir=/home/runner/.gnupg" >> ~/.gradle/gradle.properties
+          echo "signing.gnupg.executable=gpg" >> ~/.gradle/gradle.properties
+          echo "signing.gnupg.keyName=ABC48776" >> ~/.gradle/gradle.properties
+          echo "signing.gnupg.passphrase=${GPG_SIGNING_KEY_PW}" >> ~/.gradle/gradle.properties
         env:
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          GPG_SIGNING_KEY_PW: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Build package
+        run: ./gradlew clean build
+        env:
+          GPG_SIGNING_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_SIGNING_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
