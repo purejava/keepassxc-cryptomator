@@ -22,9 +22,7 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-group = 'org.purejava'
 version gitVersion() // version set by the plugin, based on the Git tag
-description = 'Plug-in for Cryptomator to store vault passwords in KeePassXC'
 java.sourceCompatibility = JavaVersion.VERSION_17
 
 def releaseGradlePluginToken = System.getenv("RELEASE_GRADLE_PLUGIN_TOKEN") ?: ''
@@ -82,17 +80,7 @@ tasks.named('shadowJar', com.github.jengelman.gradle.plugins.shadow.tasks.Shadow
     archiveClassifier.set('')
 }
 
-// Delete the original JAR before creating the shadow JAR
-//tasks.register('prepareShadowJar', Delete) {
-//    delete tasks.named('jar').get().archiveFile.get().asFile
-//}
-
-//tasks.named('shadowJar') {
-//    dependsOn('prepareShadowJar')
-//}
-
 tasks.named('githubRelease') {
-    //dependsOn('shadowJar')
     dependsOn('sourcesJar')
     dependsOn('javadocJar')
     dependsOn('signArchives')
