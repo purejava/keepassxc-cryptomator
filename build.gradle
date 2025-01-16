@@ -92,7 +92,7 @@ tasks.named('shadowJar', com.github.jengelman.gradle.plugins.shadow.tasks.Shadow
 //}
 
 tasks.named('githubRelease') {
-    dependsOn('shadowJar')
+    //dependsOn('shadowJar')
     dependsOn('sourcesJar')
     dependsOn('javadocJar')
     dependsOn('signArchives')
