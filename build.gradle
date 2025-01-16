@@ -22,6 +22,7 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+group = 'org.purejava'
 version gitVersion() // version set by the plugin, based on the Git tag
 java.sourceCompatibility = JavaVersion.VERSION_17
 
