@@ -83,13 +83,13 @@ tasks.named('shadowJar', com.github.jengelman.gradle.plugins.shadow.tasks.Shadow
 }
 
 // Delete the original JAR before creating the shadow JAR
-tasks.register('prepareShadowJar', Delete) {
-    delete tasks.named('jar').get().archiveFile.get().asFile
-}
+//tasks.register('prepareShadowJar', Delete) {
+//    delete tasks.named('jar').get().archiveFile.get().asFile
+//}
 
-tasks.named('shadowJar') {
-    dependsOn('prepareShadowJar')
-}
+//tasks.named('shadowJar') {
+//    dependsOn('prepareShadowJar')
+//}
 
 tasks.named('githubRelease') {
     dependsOn('shadowJar')
