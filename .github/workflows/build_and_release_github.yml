@@ -37,13 +37,9 @@ jobs:
         env:
           GPG_SIGNING_KEY_PW: ${{ secrets.GPG_PASSPHRASE }}
 
-      - name: Build package
-        run: ./gradlew clean build
+      - name: Build and release package
+        run: ./gradlew clean build githubRelease
         env:
           GPG_SIGNING_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
           GPG_SIGNING_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-
-      - name: Release package
-        run: ./gradlew githubRelease
-        env:
           RELEASE_GRADLE_PLUGIN_TOKEN: ${{ secrets.RELEASE_GRADLE_PLUGIN_TOKEN }}
