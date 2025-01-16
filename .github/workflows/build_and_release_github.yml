@@ -6,8 +6,7 @@ on:
       - '*'
 
 jobs:
-  createrelease:
-    name: createrelease
+  release:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     steps:
@@ -38,9 +37,13 @@ jobs:
         env:
           GPG_SIGNING_KEY_PW: ${{ secrets.GPG_PASSPHRASE }}
 
-      - name: Build and release package
-        run: ./gradlew clean build githubRelease
+      - name: Build package
+        run: ./gradlew clean build
         env:
           GPG_SIGNING_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
           GPG_SIGNING_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Release package
+        run: ./gradlew githubRelease
+        env:
           RELEASE_GRADLE_PLUGIN_TOKEN: ${{ secrets.RELEASE_GRADLE_PLUGIN_TOKEN }}
