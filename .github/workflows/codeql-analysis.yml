@@ -81,8 +81,6 @@ jobs:
     - name: Compile with Gradle without Build Scan
       if: ${{ matrix.language == 'java' && github.repository_owner != 'gradle' }}
       run: ./gradlew --init-script .github/workflows/codeql-analysis.init.gradle -S testClasses
-      env:
-        RELEASE_GRADLE_PLUGIN_TOKEN: ${{ secrets.RELEASE_GRADLE_PLUGIN_TOKEN }}
 
     - name: Cleanup Gradle Daemons
       run: ./gradlew --stop
@@ -110,3 +108,4 @@ jobs:
         rm -f ~/.gradle/caches/modules-2/modules-2.lock
         rm -f ~/.gradle/caches/modules-2/gc.properties
       if: ${{ matrix.language == 'java' }}
+
