@@ -29,19 +29,13 @@ jobs:
 
       - name: Setup GPG key information
         run: |
-          mkdir -p ~/.gradle ~/.gnupg
-          echo "signing.gnupg.homeDir=/home/runner/.gnupg" >> ~/.gradle/gradle.properties
-          echo "signing.gnupg.executable=gpg" >> ~/.gradle/gradle.properties
-          echo "signing.gnupg.keyName=ABC48776" >> ~/.gradle/gradle.properties
+          mkdir -p ~/.gradle
           echo "signing.gnupg.passphrase=${GPG_SIGNING_KEY_PW}" >> ~/.gradle/gradle.properties
         env:
           GPG_SIGNING_KEY_PW: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Build package
         run: ./gradlew clean build
-        env:
-          GPG_SIGNING_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-          GPG_SIGNING_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Release package
         run: ./gradlew githubRelease
