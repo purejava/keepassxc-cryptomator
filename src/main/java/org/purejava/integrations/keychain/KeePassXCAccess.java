@@ -24,7 +24,7 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 	}
 
 	@Override
-	public String displayName() { return "KeePassXC"; }
+	public String getName() { return "KeePassXC"; }
 
 	@Override
 	public boolean isSupported() { return proxy.connect(); }
@@ -57,12 +57,7 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 	}
 
 	@Override
-	public void storePassphrase(String vault, String displayName, CharSequence password) throws KeychainAccessException {
-		storePassphrase(vault, displayName, password, false);
-	}
-
-	@Override
-	public void storePassphrase(String vault, String name, CharSequence password, boolean requireOsAuthentication) throws KeychainAccessException {
+	public void storePassphrase(String vault, String name, CharSequence password) throws KeychainAccessException {
 		if (isLocked()) {
 			LOG.info("Failed to store password. KeePassXC database is locked. Needs to be unlocked first.");
 			unlock();
@@ -129,11 +124,6 @@ public class KeePassXCAccess implements KeychainAccessProvider {
 		} else {
 			throw new KeychainAccessException("Couldn't retrieve uuid of the entry");
 		}
-	}
-
-	@Override
-	public void changePassphrase(String vault, CharSequence password) throws KeychainAccessException {
-		changePassphrase(vault, "Vault", password);
 	}
 
 	@Override
