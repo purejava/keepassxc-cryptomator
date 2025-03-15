@@ -7,7 +7,7 @@ org-junit-jupiter-junit-jupiter = "5.12.0"
 org-junit-jupiter-junit-jupiter-api = "5.12.0"
 org-junit-jupiter-junit-jupiter-engine = "5.12.1"
 org-purejava-keepassxc-proxy-access = "1.2.7"
-org-slf4j-slf4j-api = "2.0.16"
+org-slf4j-slf4j-api = "2.0.17"
 org-slf4j-slf4j-simple = "2.0.17"
 
 [libraries]
