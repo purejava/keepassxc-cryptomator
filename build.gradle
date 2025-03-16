@@ -19,6 +19,7 @@ dependencies {
     testImplementation libs.org.junit.jupiter.junit.jupiter.api
     testImplementation libs.org.junit.jupiter.junit.jupiter.engine
     testImplementation libs.org.junit.jupiter.junit.jupiter
+    testRuntimeOnly libs.org.junit.platform.junit.platform.launcher
 }
 
 group = 'org.purejava'
