@@ -1,7 +1,7 @@
 plugins {
     id 'com.gradleup.shadow' version '8.3.6'
     id 'com.github.breadmoirai.github-release' version '2.5.2'
-    id 'com.palantir.git-version' version '3.1.0'
+    id 'com.palantir.git-version' version '3.2.0'
     id 'java'
     id 'java-library'
     id 'signing'
