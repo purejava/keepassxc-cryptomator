@@ -38,6 +38,6 @@ jobs:
         run: ./gradlew clean build
 
       - name: Release package
-        run: ./gradlew githubRelease
+        run: ./gradlew publish
         env:
           RELEASE_GRADLE_PLUGIN_TOKEN: ${{ secrets.RELEASE_GRADLE_PLUGIN_TOKEN }}
