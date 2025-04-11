@@ -98,7 +98,7 @@ tasks.withType<JavaCompile> {
 }
 
 tasks.withType<Javadoc> {
-    options.encoding = "UTF-8"
+    (options as StandardJavadocDocletOptions).encoding = "UTF-8"
     if (JavaVersion.current().isJava9Compatible) {
         (options as StandardJavadocDocletOptions).addBooleanOption("html5", true)
     }
