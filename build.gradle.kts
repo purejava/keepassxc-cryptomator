@@ -1,6 +1,6 @@
 plugins {
     id("com.gradleup.shadow") version "8.3.6"
-    id("maven-publish")
+    id("com.github.breadmoirai.github-release") version "2.5.2"
     id("com.palantir.git-version") version "3.2.0"
     id("java")
     id("java-library")
@@ -104,21 +104,25 @@ tasks.withType<Javadoc> {
     }
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("default") {
-            from(components["java"])
+githubRelease {
+    token(releaseGradlePluginToken)
+    tagName = project.version.toString()
+    releaseName = project.version.toString()
+    targetCommitish = "main"
+    draft = true
+    body = """
+        [![Downloads](https://img.shields.io/github/downloads/purejava/keepassxc-cryptomator/latest/keepassxc-cryptomator-${project.version}.jar)](https://github.com/purejava/keepassxc-cryptomator/releases/latest/download/keepassxc-cryptomator-${project.version}.jar)
+        
+        - xxx
+    """.trimIndent()
+    releaseAssets.from(
+        fileTree("${layout.buildDirectory.get()}/libs") {
+            include(
+                "keepassxc-cryptomator-${project.version}.jar",
+                "keepassxc-cryptomator-${project.version}.jar.asc",
+                "keepassxc-cryptomator-${project.version}-sources.jar",
+                "keepassxc-cryptomator-${project.version}-sources.jar.asc"
+            )
         }
-    }
-
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/purejava/keepassxc-cryptomator")
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = releaseGradlePluginToken
-            }
-        }
-    }
+    )
 }
