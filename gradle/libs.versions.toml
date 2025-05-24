@@ -2,7 +2,7 @@
 # https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
 
 [versions]
-org-cryptomator-integrations-api = "1.5.1"
+org-cryptomator-integrations-api = "1.6.0"
 org-junit-jupiter-junit-jupiter = "5.12.2"
 org-junit-jupiter-junit-jupiter-api = "5.12.1"
 org-junit-jupiter-junit-jupiter-engine = "5.12.2"
