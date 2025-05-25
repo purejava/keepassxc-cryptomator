@@ -84,7 +84,6 @@ tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJ
 
 artifacts {
     add("archives", tasks.named("shadowJar"))
-    add("archives", tasks.named("sourcesJar"))
 }
 
 signing {
@@ -120,8 +119,6 @@ githubRelease {
             include(
                 "keepassxc-cryptomator-${project.version}.jar",
                 "keepassxc-cryptomator-${project.version}.jar.asc",
-                "keepassxc-cryptomator-${project.version}-sources.jar",
-                "keepassxc-cryptomator-${project.version}-sources.jar.asc"
             )
         }
     )
