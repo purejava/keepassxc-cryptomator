@@ -7,6 +7,11 @@ updates:
       day: "saturday"
       time: "06:00"
       timezone: "Etc/UTC"
+    groups:
+      java-bundles:
+        patterns:
+          - "org.junit.jupiter:*"
+          - "org.slf4j:*"
 
   - package-ecosystem: "github-actions"
     directory: "/" # even for `.github/workflows`
