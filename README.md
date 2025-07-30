@@ -13,7 +13,7 @@ Plug-in for Cryptomator to store vault passwords in KeePassXC
 For documentation please take a look at the [Wiki](https://github.com/purejava/keepassxc-cryptomator/wiki).
 
 # Donation
-If you like this project, you can give me a cup of coffee :)
+If you like this project, why not buy me a cup of coffee?
 
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/donate?hosted_button_id=XVX9ZM7WE4ANL)
 
