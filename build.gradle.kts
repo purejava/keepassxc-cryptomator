@@ -29,7 +29,7 @@ version = gitVersion() // version set by the plugin, based on the Git tag
 val releaseGradlePluginToken: String = System.getenv("RELEASE_GRADLE_PLUGIN_TOKEN") ?: ""
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
     withSourcesJar()
     withJavadocJar()
 }
