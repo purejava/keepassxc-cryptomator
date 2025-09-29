@@ -5,6 +5,7 @@ plugins {
     id("java")
     id("java-library")
     id("signing")
+    id("maven-publish")
 }
 
 repositories {
@@ -82,14 +83,19 @@ tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJ
     archiveClassifier.set("")
 }
 
-artifacts {
-    add("archives", tasks.named("shadowJar"))
+publishing {
+    publications {
+        create<MavenPublication>("shadow") {
+            artifact(tasks.shadowJar) {
+                classifier = "" // ensure no "-all" suffix
+            }
+        }
+    }
 }
 
 signing {
     useGpgCmd()
-    // Sign both the sources JAR and the shadow JAR
-    sign(configurations.getByName("archives"))
+    sign(publishing.publications["shadow"])
 }
 
 tasks.withType<JavaCompile> {
