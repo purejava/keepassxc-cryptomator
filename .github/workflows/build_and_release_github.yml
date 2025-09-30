@@ -35,7 +35,7 @@ jobs:
           GPG_SIGNING_KEY_PW: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Build package
-        run: ./gradlew clean build
+        run: ./gradlew clean build signShadowPublication
 
       - name: Release package
         run: ./gradlew githubRelease
