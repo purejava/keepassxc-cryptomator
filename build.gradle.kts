@@ -98,6 +98,11 @@ signing {
     sign(publishing.publications["shadow"])
 }
 
+tasks.named("signShadowPublication") {
+    dependsOn(tasks.named("jar"))
+    dependsOn(tasks.named("shadowJar"))
+}
+
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
 }
