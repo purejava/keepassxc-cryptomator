@@ -6,6 +6,7 @@ org-cryptomator-integrations-api = "1.7.0"
 org-junit-jupiter-junit-jupiter = "6.0.1"
 org-junit-jupiter-junit-jupiter-api = "6.0.1"
 org-junit-jupiter-junit-jupiter-engine = "6.0.1"
+org-junit-platform-junit-platform-launcher = "6.0.1"
 org-purejava-keepassxc-proxy-access = "1.3.0"
 org-slf4j-slf4j-api = "2.0.17"
 org-slf4j-slf4j-simple = "2.0.17"
@@ -15,7 +16,7 @@ org-cryptomator-integrations-api = { module = "org.cryptomator:integrations-api"
 org-junit-jupiter-junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "org-junit-jupiter-junit-jupiter" }
 org-junit-jupiter-junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "org-junit-jupiter-junit-jupiter-api" }
 org-junit-jupiter-junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "org-junit-jupiter-junit-jupiter-engine" }
-org-junit-platform-junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+org-junit-platform-junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "org-junit-platform-junit-platform-launcher" }
 org-purejava-keepassxc-proxy-access = { module = "org.purejava:keepassxc-proxy-access", version.ref = "org-purejava-keepassxc-proxy-access" }
 org-slf4j-slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "org-slf4j-slf4j-api" }
 org-slf4j-slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "org-slf4j-slf4j-simple" }
