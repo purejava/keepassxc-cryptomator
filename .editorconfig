@@ -10,3 +10,12 @@ indent_style = space
 
 [*.{js,py,json,yml,css,scss,html}]
 indent_size = 2
+
+[*.{js,css,scss}]
+quote_type = single
+
+[*.{yml,yaml}]
+quote_type = double
+
+[*.md]
+trim_trailing_whitespace = false
