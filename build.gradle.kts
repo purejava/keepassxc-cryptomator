@@ -1,5 +1,5 @@
 plugins {
-    id("com.gradleup.shadow") version "9.3.2"
+    id("com.gradleup.shadow") version "9.4.0"
     id("com.github.breadmoirai.github-release") version "2.5.2"
     id("com.palantir.git-version") version "5.0.0"
     id("java")
