@@ -33,6 +33,7 @@ jobs:
       # Checkout must run before the caching key is computed using the `hashFiles` method
 
     - name: Cache Gradle Modules
+      if: ${{ matrix.language == 'java' }}
       uses: actions/cache@v5
       with:
         path: |
@@ -41,7 +42,6 @@ jobs:
           ~/.gradle/caches/signatures/
           ~/.gradle/caches/keyrings/
         key: ${{ runner.os }}-gradle-cache-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
-        if: ${{ matrix.language == 'java' }}
 
     - name: Disable checksum offloading
       # See: https://github.com/actions/virtual-environments/issues/1187#issuecomment-686735760
