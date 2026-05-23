@@ -10,8 +10,7 @@ updates:
     groups:
       java-bundles:
         patterns:
-          - "org.junit.jupiter:*"
-          - "org.slf4j:*"
+          - "*"
 
   - package-ecosystem: "github-actions"
     directory: "/" # even for `.github/workflows`
