@@ -29,12 +29,12 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       # Checkout must run before the caching key is computed using the `hashFiles` method
 
     - name: Cache Gradle Modules
       if: ${{ matrix.language == 'java' }}
-      uses: actions/cache@v5
+      uses: actions/cache@v6
       with:
         path: |
           ~/.gradle/caches/modules-2/
