@@ -30,7 +30,9 @@ version = gitVersion() // version set by the plugin, based on the Git tag
 val releaseGradlePluginToken: String = System.getenv("RELEASE_GRADLE_PLUGIN_TOKEN") ?: ""
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
+        toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
     withSourcesJar()
     withJavadocJar()
 }
@@ -122,7 +124,7 @@ githubRelease {
     draft = true
     body = """
         [![Downloads](https://img.shields.io/github/downloads/purejava/keepassxc-cryptomator/latest/keepassxc-cryptomator-${project.version}.jar)](https://github.com/purejava/keepassxc-cryptomator/releases/latest/download/keepassxc-cryptomator-${project.version}.jar)
-        
+
         - xxx
     """.trimIndent()
     releaseAssets.from(
