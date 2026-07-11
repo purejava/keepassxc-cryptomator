@@ -18,3 +18,9 @@ build/
 .idea/compiler.xml
 .idea/jarRepositories.xml
 *.iml
+
+### VS Code ###
+.vscode/
+
+### Mac OS ###
+.DS_Store
