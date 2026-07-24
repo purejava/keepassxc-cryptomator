@@ -5,6 +5,9 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/f092de6bfd99450f8a9a2766ed01c3c1)](https://app.codacy.com/gh/purejava/keepassxc-cryptomator?utm_source=github.com&utm_medium=referral&utm_content=purejava/keepassxc-cryptomator&utm_campaign=Badge_Grade_Settings)
 [![GitHub Release](https://img.shields.io/github/v/release/purejava/keepassxc-cryptomator)](https://github.com/purejava/keepassxc-cryptomator/releases)
 [![License](https://img.shields.io/github/license/purejava/keepassxc-cryptomator.svg)](https://github.com/purejava/keepassxc-cryptomator/blob/master/LICENSE)
+<a href="#supported-platforms"><img alt="Windows" src="https://img.shields.io/badge/Windows-supported-blue.svg" /></a>
+<a href="#supported-platforms"><img alt="macOS" src="https://img.shields.io/badge/macOS-supported-blue.svg" /></a>
+<a href="#supported-platforms"><img alt="Linux" src="https://img.shields.io/badge/Linux-supported-blue.svg" /></a>
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/donate?hosted_button_id=XVX9ZM7WE4ANL)
 
 Plug-in for Cryptomator to store vault passwords in KeePassXC
