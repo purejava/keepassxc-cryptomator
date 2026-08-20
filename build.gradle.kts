@@ -24,8 +24,10 @@ dependencies {
 }
 
 group = "org.purejava"
-val gitVersion: groovy.lang.Closure<String> by extra
-version = gitVersion() // version set by the plugin, based on the Git tag
+val gitVersion = extra["gitVersion"] as? groovy.lang.Closure<*>
+    ?: error("Extra property 'gitVersion' is not a Closure")
+version = gitVersion.call() as? String
+    ?: error("gitVersion did not return a String") // version set by the plugin, based on the Git tag
 
 val releaseGradlePluginToken: String = System.getenv("RELEASE_GRADLE_PLUGIN_TOKEN") ?: ""
 

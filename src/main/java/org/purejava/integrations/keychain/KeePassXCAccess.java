@@ -1,15 +1,14 @@
 package org.purejava.integrations.keychain;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import org.cryptomator.integrations.keychain.KeychainAccessException;
 import org.cryptomator.integrations.keychain.KeychainAccessProvider;
 import org.purejava.KeepassProxyAccess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 
 public class KeePassXCAccess implements KeychainAccessProvider {
 
